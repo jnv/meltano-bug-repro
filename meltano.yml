@@ -2,20 +2,25 @@ version: 1
 default_environment: dev
 project_id: 4991026d-84e4-45f8-aea8-588099bc5973
 environments:
-- name: dev
-- name: staging
-- name: prod
+  - name: dev
+  - name: staging
+  - name: prod
 plugins:
   extractors:
-  - name: tap-smoke-test
-    variant: meltano
-    pip_url: git+https://github.com/meltano/tap-smoke-test.git
-    config:
-      streams:
-      - stream_name: animals
-        input_filename: 
-          https://gitlab.com/meltano/tap-smoke-test/-/raw/main/demo-data/animals-data.jsonl
+    - name: tap-smoke-test
+      variant: meltano
+      pip_url: git+https://github.com/meltano/tap-smoke-test.git
+      config:
+        streams:
+          - stream_name: animals
+            input_filename: https://gitlab.com/meltano/tap-smoke-test/-/raw/main/demo-data/animals-data.jsonl
   mappers:
-  - name: meltano-map-transformer
-    variant: meltano
-    pip_url: git+https://github.com/MeltanoLabs/meltano-map-transform.git
+    - name: meltano-map-transformer
+      variant: meltano
+      pip_url: git+https://github.com/MeltanoLabs/meltano-map-transform.git
+      mappings:
+        - name: upper
+          config:
+            stream_maps:
+              animals:
+                description: _['description'].upper()
